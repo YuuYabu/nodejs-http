@@ -10,7 +10,19 @@ const server = http
     });
     switch (req.method) {
       case "GET":
-        res.write(pug.renderFile("./form.pug"));
+        if (req.url === "/enquetes/yaki-shabu") {
+          res.write(pug.renderFile("./form.pug", {
+            path: req.url,
+            firstItem: "焼き肉", 
+            secondItem: "しゃぶしゃぶ"
+          }));
+        } else if (req.url === "/enquetes/rice-bread") {
+          res.write(pug.renderFile("./form.pug", {
+            path: req.url,
+            firstItem: "ごはん", 
+            secondItem: "パン"
+          }));
+        }
         res.end();
         break;
       case "POST":
@@ -21,7 +33,7 @@ const server = http
           })
           .on("end", () => {
             const answer = new URLSearchParams(rawData);
-            const body = `${answer.get("name")}さんは${answer.get("yaki-shabu")}に投票しました`
+            const body = `${answer.get("name")}さんは${answer.get("favourite")}に投票しました`
             console.info(`[${now}] ${body}`);
             res.write(
               `<!DOCTYPE html><html lang="ja"><body><h1>${body}</h1></body></html>`
